@@ -1,6 +1,6 @@
 <?php
 
-namespace icc\helpers;
+namespace consultnn\helpers;
 
 /**
  * Class Filter

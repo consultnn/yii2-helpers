@@ -1,5 +1,5 @@
 {
-  "name": "icc/yii2-helpers",
+  "name": "consultnn/yii2-helpers",
   "description": "",
   "license": "MIT",
   "authors": [
@@ -12,5 +12,10 @@
   "minimum-stability": "dev",
   "require": {
     "yiisoft/yii2": "2.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "consultnn\\helpers\\": "."
+    }
   }
 }
