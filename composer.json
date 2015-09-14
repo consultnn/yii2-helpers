@@ -1,0 +1,16 @@
+{
+  "name": "icc/yii2-helpers",
+  "description": "",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ICC",
+      "email": "tech@consultnn.ru"
+    }
+  ],
+  "repositories" : [ ],
+  "minimum-stability": "dev",
+  "require": {
+    "yiisoft/yii2": "2.0.*"
+  }
+}
