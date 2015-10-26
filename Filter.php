@@ -43,11 +43,19 @@ class Filter
     {
         $result = [];
         if (!empty($date['min'])) {
-            $result['$gte'] = strtotime($date['min']);
+            if (!is_numeric($date['max'])) {
+                $date['min'] = strtotime($date['min']);
+            }
+
+            $result['$gte'] = $date['min'];
         }
 
         if (!empty($date['max'])) {
-            $result['$lte'] = strtotime($date['max']);
+            if (!is_numeric($date['max'])) {
+                $date['max'] = strtotime($date['max']);
+            }
+
+            $result['$lte'] = $date['max'];
         }
 
         return empty($result) ? null : $result;
