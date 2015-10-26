@@ -50,7 +50,7 @@ class Filter
             $result['$lte'] = strtotime($date['max']);
         }
 
-        return $result;
+        return empty($result) ? null : $result;
     }
 
     /**
