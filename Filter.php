@@ -72,6 +72,21 @@ class Filter
         }
 
         $timestamp = strtotime($date);
+        
+        return ['$gte' => $timestamp, '$lte' => $timestamp + 60*60*24 ];
+    }
+
+    public static function getDateFilter($date)
+    {
+        if (empty($date)) {
+            return null;
+        }
+        try {
+            $timestamp = (double) (new \DateTime($date))->format('U');
+        } catch (\Exception $e) {
+            return null;
+        }
+
         return ['$gte' => $timestamp, '$lte' => $timestamp + 60*60*24 ];
     }
 
@@ -120,5 +135,27 @@ class Filter
         }
 
         return $return;
+    }
+    
+    public static function sortByIds(&$objects, $ids)
+    {
+        $ids = array_flip($ids);
+        usort($objects, function ($object1, $object2) use ($ids) {
+            return $ids[(string) $object1->_id] > $ids[(string) $object2->_id];
+        });
+        return $objects;
+    }
+
+    public static function map($objects, $params)
+    {
+        $result = [];
+        foreach ($objects as $object) {
+            $objectParams = [];
+            foreach ($params as $from => $to) {
+                $objectParams[$to] = ArrayHelper::getValue($object, $from);
+            }
+            $result[] = $objectParams;
+        }
+        return $result;
     }
 }
