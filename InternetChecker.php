@@ -1,6 +1,6 @@
 <?php
 
-namespace common\helpers;
+namespace consultnn\helpers;
 
 use Yii;
 
