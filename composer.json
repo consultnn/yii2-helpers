@@ -6,9 +6,13 @@
     {
       "name": "ICC",
       "email": "tech@consultnn.ru"
+    },
+    {
+      "name": "Maxim Mironyuk",
+      "email": "serieznyi@gmail.com",
+      "role": "Developer"
     }
   ],
-  "repositories" : [ ],
   "minimum-stability": "dev",
   "require": {
     "yiisoft/yii2": "2.0.*"
@@ -17,5 +21,10 @@
     "psr-4": {
       "consultnn\\helpers\\": "."
     }
-  }
+  },
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	}
 }
