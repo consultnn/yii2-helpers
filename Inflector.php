@@ -2,6 +2,8 @@
 
 namespace consultnn\helpers;
 
+use yii\helpers\BaseInflector;
+
 /**
  * Class Inflector
  *
