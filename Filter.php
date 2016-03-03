@@ -41,36 +41,19 @@ class Filter
      */
     public static function dateRange($date)
     {
-        if (count($date) === 2 && !empty(array_filter(array_values($date)))) {
-            if ($date['min'] === $date['max']) {
-                if (is_string($date['min'])) {
-                    $date['min'] = strtotime($date['min']);
-                }
-
-                $beginOfDay = strtotime('midnight', $date['min']);
-
-                $endOfDay   = strtotime('tomorrow', $beginOfDay) - 1;
-
-                $date['min'] = $beginOfDay;
-                $date['max'] = $endOfDay;
-            }
-        }
-
         $result = [];
         if (!empty($date['min'])) {
             if (!is_numeric($date['max'])) {
                 $date['min'] = strtotime($date['min']);
             }
-
-            $result['$gte'] = $date['min'];
+            $result['$gte'] = strtotime('midnight', $date['min']);
         }
 
         if (!empty($date['max'])) {
             if (!is_numeric($date['max'])) {
-                $date['max'] = strtotime('tomorrow', strtotime($date['max'])) - 1;
+                $date['max'] = strtotime($date['max']);
             }
-
-            $result['$lte'] = $date['max'];
+            $result['$lt'] = strtotime('tomorrow', $date['max']);
         }
 
         return empty($result) ? null : $result;
