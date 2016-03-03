@@ -67,7 +67,7 @@ class Filter
 
         if (!empty($date['max'])) {
             if (!is_numeric($date['max'])) {
-                $date['max'] = strtotime($date['max']);
+                $date['max'] = strtotime('tomorrow', strtotime($date['max'])) - 1;
             }
 
             $result['$lte'] = $date['max'];
