@@ -1,6 +1,8 @@
 <?php
 
 namespace consultnn\helpers;
+use MongoDB\BSON\ObjectID;
+use MongoDB\Driver\Exception\InvalidArgumentException;
 
 /**
  * Class Filter
@@ -90,13 +92,14 @@ class Filter
 
     /**
      * @param $id
-     * @return \MongoId|null
+     * @return ObjectID|null
      */
     public static function mongoId($id)
     {
-        if (\MongoId::isValid($id)) {
-            return new \MongoId($id);
+        if (self::mongoValid($id)) {
+            return new ObjectID($id);
         }
+        
         return null;
     }
 
@@ -112,8 +115,8 @@ class Filter
 
         $result = [];
         foreach ($ids as $id) {
-            if (\MongoId::isValid($id)) {
-                $result[] = new \MongoId($id);
+            if (self::mongoValid($id)) {
+                $result[] = new ObjectID($id);
             }
         }
         return $result;
@@ -134,7 +137,7 @@ class Filter
 
         return $return;
     }
-    
+
     public static function sortByIds(&$objects, $ids)
     {
         $ids = array_flip($ids);
@@ -155,5 +158,16 @@ class Filter
             $result[] = $objectParams;
         }
         return $result;
+    }
+
+    public static function mongoValid($id)
+    {
+        try {
+            new ObjectID($id);
+
+            return true;
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
     }
 }
