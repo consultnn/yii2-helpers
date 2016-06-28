@@ -2,6 +2,7 @@
 
 namespace consultnn\helpers;
 use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\Regex;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 
 /**
@@ -34,7 +35,7 @@ class Filter
      */
     public static function regex($value)
     {
-        return !empty($value) ? new \MongoRegex("/{$value}/i") : null;
+        return !empty($value) ? new Regex($value, 'i') : null;
     }
 
     /**
