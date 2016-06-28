@@ -97,7 +97,7 @@ class Filter
      */
     public static function mongoId($id)
     {
-        if (self::mongoValid($id)) {
+        if ($id && self::mongoValid($id)) {
             return new ObjectID($id);
         }
         
@@ -116,7 +116,7 @@ class Filter
 
         $result = [];
         foreach ($ids as $id) {
-            if (self::mongoValid($id)) {
+            if ($id && self::mongoValid($id)) {
                 $result[] = new ObjectID($id);
             }
         }
