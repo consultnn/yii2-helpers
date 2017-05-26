@@ -2,10 +2,6 @@
 
 namespace consultnn\helpers;
 
-use MongoDB\BSON\ObjectID;
-use MongoDB\BSON\Regex;
-use MongoDB\Driver\Exception\InvalidArgumentException;
-
 /**
  * Class Filter
  * @package common\helpers
@@ -32,11 +28,11 @@ class Filter
 
     /**
      * @param $value
-     * @return Regex|null
+     * @return \MongoRegex|null
      */
     public static function regex($value)
     {
-        return !empty($value) ? new Regex($value, 'i') : null;
+        return !empty($value) ? new \MongoRegex("/{$value}/i") : null;
     }
 
     /**
@@ -94,16 +90,14 @@ class Filter
 
     /**
      * @param $id
-     * @return ObjectID|null
+     * @return \MongoId|null
      */
     public static function mongoId($id)
     {
-        try {
-            $id = new ObjectID($id);
-        } catch (InvalidArgumentException $exception) {
-            return null;
+        if (\MongoId::isValid($id)) {
+            return new \MongoId($id);
         }
-        return $id;
+        return null;
     }
 
     /**
@@ -118,9 +112,11 @@ class Filter
 
         $result = [];
         foreach ($ids as $id) {
-            $result[] = self::mongoId($id);
+            if (\MongoId::isValid($id)) {
+                $result[] = new \MongoId($id);
+            }
         }
-        return array_filter($result);
+        return $result;
     }
 
     /**

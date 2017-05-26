@@ -16,10 +16,8 @@ class InternetChecker {
      */
     public static function urlAvailable($address)
     {
-        if ($address == null) {
+        if($address == NULL)
             return false;
-        }
-
         $host = parse_url($address, PHP_URL_HOST);
         $address = mb_ereg_replace($host, idn_to_ascii($host), $address);
 
@@ -43,10 +41,8 @@ class InternetChecker {
      */
     public static function emailAvailable($email)
     {
-        if ($email == null) {
+        if($email == NULL)
             return false;
-        }
-
 
         return self::verifyEmail($email, Yii::$app->params['adminEmail']);
     }
@@ -59,41 +55,42 @@ class InternetChecker {
      * @link https://github.com/hbattat/verifyEmail
      * @return array|bool|string
      */
-    private static function verifyEmail($toEmail, $fromEmail, $getDetails = false)
-    {
-        $emailArr = explode('@', $toEmail);
+    private static function verifyEmail($toEmail, $fromEmail, $getDetails = false){
+        $emailArr = explode("@", $toEmail);
         $domain = array_slice($emailArr, -1);
         $domain = $domain[0];
         $details = '';
         // Trim [ and ] from beginning and end of domain string, respectively
-        $domain = ltrim($domain, '[');
-        $domain = rtrim($domain, ']');
-        if ('IPv6:' == substr($domain, 0, strlen('IPv6:'))) {
-            $domain = substr($domain, strlen('IPv6') + 1);
+        $domain = ltrim($domain, "[");
+        $domain = rtrim($domain, "]");
+        if( "IPv6:" == substr($domain, 0, strlen("IPv6:")) ) {
+            $domain = substr($domain, strlen("IPv6") + 1);
         }
 
         $mxHosts = [];
         $mxWeight = [];
 
-        if (filter_var($domain, FILTER_VALIDATE_IP)) {
+        if( filter_var($domain, FILTER_VALIDATE_IP) ) {
             $mxIp = $domain;
-        } else {
+        }
+        else {
             getmxrr($domain, $mxHosts, $mxWeight);
         }
 
-        if (!empty($mxHosts)) {
+        if(!empty($mxHosts))
             $mxIp = $mxHosts[array_search(min($mxWeight), $mxHosts)];
-        } else {
-            if (filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        else {
+            if( filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
                 $recordA = dns_get_record($domain, DNS_A);
-            } elseif (filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            }
+            elseif( filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ) {
                 $recordA = dns_get_record($domain, DNS_AAAA);
             }
-            if (!empty($recordA)) {
+            if( !empty($recordA) )
                 $mxIp = $recordA[0]['ip'];
-            } else {
+            else {
                 $result   = false;
-                $details .= 'No suitable MX records found.';
+                $details .= "No suitable MX records found.";
                 return ( (true == $getDetails) ? [$result, $details] : $result );
             }
         }
@@ -101,22 +98,21 @@ class InternetChecker {
         $errNo = null;
         $errStr = null;
         $connect = @fsockopen($mxIp, 25, $errNo, $errStr, 5);
-        $result = null;
-        if ($connect) {
-            if (preg_match('/^220/i', $out = fgets($connect, 1024))) {
-                fputs($connect, "HELO {$mxIp}\r\n");
-                $out = fgets($connect, 1024);
-                $details .= $out . '\n';
+        if($connect) {
+            if(preg_match("/^220/i", $out = fgets($connect, 1024))) {
+                fputs ($connect , "HELO $mxIp\r\n");
+                $out = fgets ($connect, 1024);
+                $details .= $out."\n";
 
-                fputs($connect, "MAIL FROM: <{$fromEmail}>\r\n");
-                $from = fgets($connect, 1024);
-                $details .= $from . '\n';
-                fputs($connect, "RCPT TO: <{$toEmail}>\r\n");
-                $to = fgets($connect, 1024);
-                $details .= $to . "\n";
-                fputs($connect, 'QUIT');
+                fputs ($connect , "MAIL FROM: <$fromEmail>\r\n");
+                $from = fgets ($connect, 1024);
+                $details .= $from."\n";
+                fputs ($connect , "RCPT TO: <$toEmail>\r\n");
+                $to = fgets ($connect, 1024);
+                $details .= $to."\n";
+                fputs ($connect , "QUIT");
                 fclose($connect);
-                if (!preg_match('/^250/i', $from) || !preg_match('/^250/i', $to)) {
+                if(!preg_match("/^250/i", $from) || !preg_match("/^250/i", $to)) {
                     $result = false;
                 } else {
                     $result = true;
@@ -124,12 +120,13 @@ class InternetChecker {
             }
         } else {
             $result = false;
-            $details .= 'Could not connect to server';
+            $details .= "Could not connect to server";
         }
 
-        if ($getDetails) {
+        if($getDetails){
             return [$result, $details];
-        } else {
+        }
+        else{
             return $result;
         }
     }

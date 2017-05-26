@@ -15,8 +15,10 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      */
     public static function arrayFilterRecursive($input, Closure $closure)
     {
-        foreach ($input as &$value) {
-            if (is_array($value)) {
+        foreach ($input as &$value)
+        {
+            if (is_array($value))
+            {
                 $value = self::arrayFilterRecursive($value, $closure);
             }
         }
